@@ -1,9 +1,1 @@
-int main ()
-{
-
-	while (1)
-	{
-		
-	}
-
-}
+#include "blink.h"
