@@ -9,17 +9,17 @@
 //API-TYPES
 typedef enum EN_DIO_ChannelType_t
 {
-	A0, A1, A2, A3, A4, A5, A6, A7
+	A0=0, A1, A2, A3, A4, A5, A6, A7
 }EN_DIO_ChannelType_t;
 
 typedef enum EN_Dio_PortType_t
 {
-	PORTA, PORTB, PORTC, PORTD, PORTE, PORTF
+	PORTA=0, PORTB, PORTC, PORTD, PORTE, PORTF
 }EN_Dio_PortType_t;
 
 typedef enum EN_Dio_ChannelLevelType_t
 {
-	HIGH, LOW
+	LOW=0, HIGH
 }EN_Dio_ChannelLevelType_t;
 
 typedef uint8_t Dio_PortLevelType_t; 
