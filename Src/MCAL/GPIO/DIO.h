@@ -7,34 +7,32 @@
 
 
 //API-TYPES
-typedef enum EN_DIO_ChannelType_t
+typedef enum
 {
-	A0=0, A1, A2, A3, A4, A5, A6, A7
-}EN_DIO_ChannelType_t;
+	DIO_PIN_0, DIO_PIN_1, DIO_PIN_2, DIO_PIN_3, DIO_PIN_4, DIO_PIN_5, DIO_PIN_6, DIO_PIN_7
+}EN_Dio_ChannelNum_t;
 
-typedef enum EN_Dio_PortType_t
-{
-	PORTA=0, PORTB, PORTC, PORTD, PORTE, PORTF
-}EN_Dio_PortType_t;
 
-typedef enum EN_Dio_ChannelLevelType_t
+typedef enum 
 {
-	LOW=0, HIGH
+	DIO_LEVEL_LOW=0, DIO_LEVEL_HIGH
 }EN_Dio_ChannelLevelType_t;
+
+typedef enum 
+{
+	DIO_PORT_A=0, DIO_PORT_B, DIO_PORT_C, DIO_PORT_D, DIO_PORT_E, DIO_PORT_F
+}EN_Dio_PortNum_t;
 
 typedef uint8_t Dio_PortLevelType_t; 
 
+
 //API-FUNCTIONS
-EN_Dio_ChannelLevelType_t DIO_ReadChannel (EN_DIO_ChannelType_t ChannelId);
+EN_Dio_ChannelLevelType_t Dio_ReadChannel (EN_Dio_PortNum_t PortId, EN_Dio_ChannelNum_t ChannelId);
+void DIO_WriteChannel (EN_Dio_PortNum_t PortId, EN_Dio_ChannelNum_t ChannelId, EN_Dio_ChannelLevelType_t Level);
+EN_Dio_ChannelLevelType_t Dio_FlipChannel (EN_Dio_PortNum_t PortId, EN_Dio_ChannelNum_t ChannelId);
 
-void DIO_WriteChannel (EN_DIO_ChannelType_t ChannelId, EN_Dio_ChannelLevelType_t Level);
-
-Dio_PortLevelType_t Dio_ReadPort (EN_Dio_PortType_t PortId);
-
-void Dio_WritePort (EN_Dio_PortType_t PortId, Dio_PortLevelType_t Level);
-
-//we should add EN_Dio_PortType_t as input parameter too I guess
-EN_Dio_ChannelLevelType_t Dio_FlipChannel (EN_DIO_ChannelType_t ChannelId);
+Dio_PortLevelType_t Dio_ReadPort (EN_Dio_PortNum_t PortId);
+void Dio_WritePort (EN_Dio_PortNum_t PortId, Dio_PortLevelType_t Level);
 
 
 #endif /* DIO.H */

@@ -2,16 +2,20 @@
 #define PORT_H
 
 
-//Library inclusions
+/**************************/
+/*********INCLUDES*********/
+/**************************/
 #include "types.h"
+#include "DIO.h"
 
-//REGISTERS' BASE ADDRESSES     
-#define System_Control_Base_Address              	0x400FE000
 
-/**********************/
-/****GPIO REGISTERS****/
-/**********************/
+/******************************/
+/********GPIO REGISTERS********/
+/******************************/
+#define SystemControl              	0x400FE000
+
 #define GPIO_APB
+//#define GPIO_AHB
 
 #if defined(GPIO_APB)
 #define GPIOx(x)               	(x<4?((0x40004000)+((x)*0x1000)):((0x40024000)+((x-4)*1000)))
@@ -24,7 +28,7 @@
 
 
 #elif defined(GPIO_AHB)
-#define GPIO_x(x)                     (0x40058000)+((x)*0x1000)
+#define GPIOx(x)                     (0x40058000)+((x)*0x1000)
 //#define GPIO_PortA_AHB_OFFSET 									 	0x40058000
 //#define GPIO_PortB_AHB_OFFSET 										0x40059000
 //#define GPIO_PortC_AHB_OFFSET 										0x4005A000
@@ -38,63 +42,83 @@
 #endif
 
 
-//Registers' addresses and offsets
-#define RCGCGPIO_address                          *((volatile uint32*)(System_Control_Base_Address + (0x608)))    
-#define GPIODATA_offset                           0x000   //RW and is masked 0-255 addresses (bits 2-9) add them to address to apply mask
-#define GPIODIR_offset														0x400   //direction; 0 input and 1 output
-#define GPIOIS_offset                             0x404   //interrupt sense
-#define GPIOIEV_offset														0x40C   //interrupt event ....
-#define GPIOIM_offset															0x410   //interrup mask
-#define GPIOICR_offset                            0x41C   //
-#define GPIOAFSEL_offset                          0x420   //Alternate Function
-#define GPIODR2R_offset                           0x500   //2mA
-#define GPIODR4R_offset                           0x504   //4mA
-#define GPIODR8R_offset                           0x508   //8mA
-#define GPIOODR_offset														0x50C   //open-drain
-#define GPIOPUR_offset														0x510   //pullup
-#define GPIOPDR_offset														0x514   //pullup
+#define RCGCGPIO				                      *((volatile uint32*)(SystemControl + (0x608)))    
+#define GPIODATA(x)			                      *((volatile uint32*)(GPIOx(x) + (0x000)))   //RW and is masked 0-255 addresses (bits 2-9) add them to address to apply mask
+#define GPIODIR(x)														*((volatile uint32*)(GPIOx(x) + (0x400)))   //direction; 0 input and 1 output
+#define GPIOIS(x)                             *((volatile uint32*)(GPIOx(x) + (0x404)))   //interrupt sense
+#define GPIOIBE(x)														*((volatile uint32*)(GPIOx(x) + (0x408)))   //interrupt sense
+#define GPIOIEV(x)														*((volatile uint32*)(GPIOx(x) + (0x40C)))   //interrupt event ....
+#define GPIOIM(x)															*((volatile uint32*)(GPIOx(x) + (0x410)))   //interrupt sense
+#define GPIORIS(x)														*((volatile uint32*)(GPIOx(x) + (0x414)))   //interrupt sense
+#define GPIOMIS(x)														*((volatile uint32*)(GPIOx(x) + (0x418)))   //interrup mask
+#define GPIOICR(x)                            *((volatile uint32*)(GPIOx(x) + (0x41C)))   //
+#define GPIOAFSEL(x)                          *((volatile uint32*)(GPIOx(x) + (0x420)))   //Alternate Function
+#define GPIODR2R(x)                           *((volatile uint32*)(GPIOx(x) + (0x500)))   //2mA
+#define GPIODR4R(x)                           *((volatile uint32*)(GPIOx(x) + (0x504)))   //4mA
+#define GPIODR8R(x)                           *((volatile uint32*)(GPIOx(x) + (0x508)))   //8mA
+#define GPIOODR(x)														*((volatile uint32*)(GPIOx(x) + (0x50C)))   //open-drain
+#define GPIOPUR(x)														*((volatile uint32*)(GPIOx(x) + (0x510)))   //pullup
+#define GPIOPDR(x)														*((volatile uint32*)(GPIOx(x) + (0x514)))   //pulldown
+#define GPIOSLR(x)														*((volatile uint32*)(GPIOx(x) + (0x518)))   //slew rate control
+#define GPIODEN(x)														*((volatile uint32*)(GPIOx(x) + (0x51C)))   //
+#define GPIOLOCK(x)														*((volatile uint32*)(GPIOx(x) + (0x520)))   //
+#define GPIOCR(x)															*((volatile uint32*)(GPIOx(x) + (0x524)))   //commit
+#define GPIOAMSEL(x)													*((volatile uint32*)(GPIOx(x) + (0x528)))   //
+#define GPIOPCTL(x)														*((volatile uint32*)(GPIOx(x) + (0x52C)))   //
+#define GPIOADCCTL(x)													*((volatile uint32*)(GPIOx(x) + (0x530)))   //
+#define GPIODMACTL(x)													*((volatile uint32*)(GPIOx(x) + (0x534)))   //
 
-// TO-DO: page 682 for enabling and AFSEL functionalities
 
 
-//API-TYPES
-typedef enum EN_PORT_PinType_t
+/***********************/
+/*******API-TYPES*******/
+/***********************/
+typedef enum 
 {
-	A0, A1, A2, A3, A4, A5, A6, A7
-}EN_PORT_PinType_t;
+	PORT_PIN_0, PORT_PIN_1, PORT_PIN_2, PORT_PIN_3, PORT_PIN_4, PORT_PIN_5, PORT_PIN_6, PORT_PIN_7
+}EN_Port_PinNum_t;
 
-typedef enum EN_PORT_PinDirectionType_t
-{
-	OUTPUT, INPUT
-}EN_PORT_PinDirectionType_t;
 
-typedef enum EN_PORT_PinModeType_t
+typedef enum 
 {
-	//state all types here
-	DIO, UART, SPI, I2C
-}EN_PORT_PinModeType_t;
+	PORT_PIN_OUTPUT, PORT_PIN_INPUT
+}EN_Port_PinDirectionType_t;
 
-typedef enum EN_PORT_PinInternalAttachType_t
+typedef enum 
 {
-	PULL_UP, PULL_DOWN, OPEN_DRAIN
-}EN_PORT_PinInternalAttachType_t;
+	//TO-DO: State all types here
+	PORT_DEN, PORT_UART, PORT_SPI, PORT_I2C
+}EN_Port_PinModeType_t;
 
-typedef enum EN_PORT_PinOutputCurrentType_t
+typedef enum 
 {
-	_2mA, _4mA, _8mA 
-}EN_PORT_PinOutputCurrentType_t;
+	PORT_PULL_UP, PORT_PULL_DOWN, PORT_OPEN_DRAIN
+}EN_Port_PinInternalAttachType_t;
+
+typedef enum 
+{
+	PORT_2mA, PORT_4mA, PORT_8mA 
+}EN_Port_PinOutputCurrentType_t;
+
+typedef EN_Dio_PortNum_t Port_Num_t;
+typedef EN_Dio_ChannelNum_t Port_PinNum_t;
 
 typedef struct
 {
-	uint8_t PortPinMode;
-	char PortPinLevelValue;
-	char PortPinDirection;
-	uint8_t PortPinInternalAttach;
-	uint8_t PortPinOutputCurrent;
+	EN_Port_PinModeType_t PortPinMode;
+	EN_Dio_ChannelLevelType_t PortPinLevelValue;
+	EN_Port_PinDirectionType_t PortPinDirection;
+	EN_Port_PinInternalAttachType_t PortPinInternalAttach;
+	EN_Port_PinOutputCurrentType_t PortPinOutputCurrent;
+	Port_Num_t PortNum;
+	Port_PinNum_t PortPinNum;
 }Port_ConfigType;
 
 
-//API-FUNCTIONS
+/***********************/
+/*****API-FUNCTIONS*****/
+/***********************/
 void Port_Init (const Port_ConfigType ConfigPtr);
+
 
 #endif /* PORT.H */
