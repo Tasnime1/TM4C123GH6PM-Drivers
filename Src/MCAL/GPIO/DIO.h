@@ -15,7 +15,7 @@ typedef enum
 
 typedef enum 
 {
-	DIO_LEVEL_LOW=0, DIO_LEVEL_HIGH
+	DIO_PIN_LOW=0, DIO_PIN_HIGH
 }EN_Dio_ChannelLevelType_t;
 
 typedef enum 

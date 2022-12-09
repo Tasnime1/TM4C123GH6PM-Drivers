@@ -7,7 +7,7 @@
 /**************************/
 #include "types.h"
 #include "DIO.h"
-
+#include <stdio.h>
 
 /******************************/
 /********GPIO REGISTERS********/
@@ -102,11 +102,13 @@ typedef enum
 
 typedef EN_Dio_PortNum_t Port_Num_t;
 typedef EN_Dio_ChannelNum_t Port_PinNum_t;
+typedef EN_Dio_ChannelLevelType_t Port_PinLevelType_t;
+
 
 typedef struct
 {
 	EN_Port_PinModeType_t PortPinMode;
-	EN_Dio_ChannelLevelType_t PortPinLevelValue;
+	Port_PinLevelType_t PortPinLevelValue;
 	EN_Port_PinDirectionType_t PortPinDirection;
 	EN_Port_PinInternalAttachType_t PortPinInternalAttach;
 	EN_Port_PinOutputCurrentType_t PortPinOutputCurrent;
@@ -118,7 +120,7 @@ typedef struct
 /***********************/
 /*****API-FUNCTIONS*****/
 /***********************/
-void Port_Init (const Port_ConfigType ConfigPtr);
+void Port_Init (const Port_ConfigType* ConfigPtr);
 
 
 #endif /* PORT.H */
