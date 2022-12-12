@@ -1,15 +1,15 @@
-#ifndef PORT_H
-#define PORT_H
+#ifndef GPIO_H
+#define GPIO_H
 
 
 /**************************/
 /*********INCLUDES*********/
 /**************************/
 #include "types.h"
-#include "DIO.h"
 #include <stdio.h>
-#include "Port_Lcfg.h"
 #include "BIT_MATH.h"
+#include "GPIO_Lcfg.h"
+
 
 /******************************/
 /********GPIO REGISTERS********/
@@ -21,22 +21,22 @@
 
 #if defined(GPIO_APB)
 #define GPIOx(x)               	(x<4?((0x40004000)+((x)*0x1000)):((0x40024000)+((x-4)*1000)))
-//#define GPIO_PortA_APB_OFFSET                     0x40004000
-//#define GPIO_PortB_APB_OFFSET 										0x40005000
-//#define GPIO_PortC_APB_OFFSET 										0x40006000
-//#define GPIO_PortD_APB_OFFSET 										0x40007000
-//#define GPIO_PortE_APB_OFFSET 										0x40024000
-//#define GPIO_PortF_APB_OFFSET											0x40025000
+//#define GPIO_GPIOA_APB_OFFSET                     0x40004000
+//#define GPIO_GPIOB_APB_OFFSET 										0x40005000
+//#define GPIO_GPIOC_APB_OFFSET 										0x40006000
+//#define GPIO_GPIOD_APB_OFFSET 										0x40007000
+//#define GPIO_GPIOE_APB_OFFSET 										0x40024000
+//#define GPIO_GPIOF_APB_OFFSET											0x40025000
 
 
 #elif defined(GPIO_AHB)
 #define GPIOx(x)                     (0x40058000)+((x)*0x1000)
-//#define GPIO_PortA_AHB_OFFSET 									 	0x40058000
-//#define GPIO_PortB_AHB_OFFSET 										0x40059000
-//#define GPIO_PortC_AHB_OFFSET 										0x4005A000
-//#define GPIO_PortD_AHB_OFFSET 										0x4005B000
-//#define GPIO_PortE_AHB_OFFSET 										0x4005C000
-//#define GPIO_PortF_AHB_OFFSET 										0x4005D000
+//#define GPIO_GPIOA_AHB_OFFSET 									 	0x40058000
+//#define GPIO_GPIOB_AHB_OFFSET 										0x40059000
+//#define GPIO_GPIOC_AHB_OFFSET 										0x4005A000
+//#define GPIO_GPIOD_AHB_OFFSET 										0x4005B000
+//#define GPIO_GPIOE_AHB_OFFSET 										0x4005C000
+//#define GPIO_GPIOF_AHB_OFFSET 										0x4005D000
 
 #else
 #error "Please choose a bus for GPIOs"
@@ -71,58 +71,71 @@
 #define GPIODMACTL(x)													*((volatile uint32_t*)(GPIOx(x) + (0x534)))   //
 
 
-
 /***********************/
 /*******API-TYPES*******/
 /***********************/
-typedef enum 
+typedef enum
 {
-	PORT_PIN_0, PORT_PIN_1, PORT_PIN_2, PORT_PIN_3, PORT_PIN_4, PORT_PIN_5, PORT_PIN_6, PORT_PIN_7
-}EN_Port_PinNum_t;
+	GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5, GPIO_PIN_6, GPIO_PIN_7
+}EN_GPIO_ChannelNum_t;
 
 
 typedef enum 
 {
-	PORT_PIN_INPUT=0, PORT_PIN_OUTPUT
-}EN_Port_PinDirectionType_t;
+	GPIO_PIN_LOW=0, GPIO_PIN_HIGH
+}EN_GPIO_ChannelLevelType_t;
+
+typedef enum 
+{
+	GPIO_PORT_A=0, GPIO_PORT_B, GPIO_PORT_C, GPIO_PORT_D, GPIO_PORT_E, GPIO_PORT_F
+}EN_GPIO_PortNum_t;
+
+typedef uint8_t GPIO_GPIOLevelType_t; 
+
+typedef enum 
+{
+	GPIO_PIN_INPUT=0, GPIO_PIN_OUTPUT
+}EN_GPIO_PinDirectionType_t;
 
 typedef enum 
 {
 	//TO-DO: State all types here
-	PORT_DEN, PORT_UART, PORT_SPI, PORT_I2C
-}EN_Port_PinModeType_t;
+	GPIO_DEN, GPIO_UART, GPIO_SPI, GPIO_I2C
+}EN_GPIO_PinModeType_t;
 
 typedef enum 
 {
-	PORT_PULL_UP, PORT_PULL_DOWN, PORT_OPEN_DRAIN
-}EN_Port_PinInternalAttachType_t;
+	GPIO_PULL_UP, GPIO_PULL_DOWN, GPIO_OPEN_DRAIN
+}EN_GPIO_PinInternalAttachType_t;
 
 typedef enum 
 {
-	PORT_2mA, PORT_4mA, PORT_8mA 
-}EN_Port_PinOutputCurrentType_t;
-
-typedef EN_Dio_PortNum_t Port_Num_t;
-typedef EN_Dio_ChannelNum_t Port_PinNum_t;
-typedef EN_Dio_ChannelLevelType_t Port_PinLevelType_t;
+	GPIO_2mA, GPIO_4mA, GPIO_8mA 
+}EN_GPIO_PinOutputCurrentType_t;
 
 
 typedef struct
 {
-	EN_Port_PinModeType_t PortPinMode;
-	Port_PinLevelType_t PortPinLevelValue;
-	EN_Port_PinDirectionType_t PortPinDirection;
-	EN_Port_PinInternalAttachType_t PortPinInternalAttach;
-	EN_Port_PinOutputCurrentType_t PortPinOutputCurrent;
-	Port_Num_t PortNum;
-	Port_PinNum_t PortPinNum;
-}Port_ConfigType;
+	EN_GPIO_PinModeType_t PinMode;
+	EN_GPIO_ChannelLevelType_t PinLevelValue;
+	EN_GPIO_PinDirectionType_t PinDirection;
+	EN_GPIO_PinInternalAttachType_t PinInternalAttach;
+	EN_GPIO_PinOutputCurrentType_t PinOutputCurrent;
+	EN_GPIO_PortNum_t PortNum;
+	EN_GPIO_ChannelNum_t PinNum;
+}GPIO_ConfigType;
+
 
 
 /***********************/
 /*****API-FUNCTIONS*****/
 /***********************/
-void Port_Init (const Port_ConfigType* ConfigPtr);
+void GPIO_Init (const GPIO_ConfigType* ConfigPtr);
 
+EN_GPIO_ChannelLevelType_t GPIO_ReadChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId);
+void GPIO_WriteChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId, EN_GPIO_ChannelLevelType_t Level);
+EN_GPIO_ChannelLevelType_t GPIO_FlipChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId);
+GPIO_GPIOLevelType_t GPIO_ReadGPIO (EN_GPIO_PortNum_t GPIOId);
+void GPIO_WriteGPIO (EN_GPIO_PortNum_t GPIOId, GPIO_GPIOLevelType_t Level);
 
-#endif /* PORT.H */
+#endif /* GPIO.H */

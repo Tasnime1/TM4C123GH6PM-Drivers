@@ -1,8 +1,8 @@
 #include "blink.h"
-#include "Port_Lcfg.h"
+#include "GPIO_Lcfg.h"
 
 
-extern const Port_ConfigType PortsConfig [];
+extern const GPIO_ConfigType PortsConfig [];
 
 int main()
 {

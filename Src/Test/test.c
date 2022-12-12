@@ -1,6 +1,6 @@
 #include "test.h"
 
-void Test_DioDriver()
+void Test_GPIODriver()
 {
 
 }
