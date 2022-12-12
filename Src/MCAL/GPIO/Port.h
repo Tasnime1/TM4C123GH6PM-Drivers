@@ -8,6 +8,8 @@
 #include "types.h"
 #include "DIO.h"
 #include <stdio.h>
+#include "Port_Lcfg.h"
+#include "BIT_MATH.h"
 
 /******************************/
 /********GPIO REGISTERS********/
@@ -42,31 +44,31 @@
 #endif
 
 
-#define RCGCGPIO				                      *((volatile uint32*)(SystemControl + (0x608)))    
-#define GPIODATA(x)			                      *((volatile uint32*)(GPIOx(x) + (0x000)))   //RW and is masked 0-255 addresses (bits 2-9) add them to address to apply mask
-#define GPIODIR(x)														*((volatile uint32*)(GPIOx(x) + (0x400)))   //direction; 0 input and 1 output
-#define GPIOIS(x)                             *((volatile uint32*)(GPIOx(x) + (0x404)))   //interrupt sense
-#define GPIOIBE(x)														*((volatile uint32*)(GPIOx(x) + (0x408)))   //interrupt sense
-#define GPIOIEV(x)														*((volatile uint32*)(GPIOx(x) + (0x40C)))   //interrupt event ....
-#define GPIOIM(x)															*((volatile uint32*)(GPIOx(x) + (0x410)))   //interrupt sense
-#define GPIORIS(x)														*((volatile uint32*)(GPIOx(x) + (0x414)))   //interrupt sense
-#define GPIOMIS(x)														*((volatile uint32*)(GPIOx(x) + (0x418)))   //interrup mask
-#define GPIOICR(x)                            *((volatile uint32*)(GPIOx(x) + (0x41C)))   //
-#define GPIOAFSEL(x)                          *((volatile uint32*)(GPIOx(x) + (0x420)))   //Alternate Function
-#define GPIODR2R(x)                           *((volatile uint32*)(GPIOx(x) + (0x500)))   //2mA
-#define GPIODR4R(x)                           *((volatile uint32*)(GPIOx(x) + (0x504)))   //4mA
-#define GPIODR8R(x)                           *((volatile uint32*)(GPIOx(x) + (0x508)))   //8mA
-#define GPIOODR(x)														*((volatile uint32*)(GPIOx(x) + (0x50C)))   //open-drain
-#define GPIOPUR(x)														*((volatile uint32*)(GPIOx(x) + (0x510)))   //pullup
-#define GPIOPDR(x)														*((volatile uint32*)(GPIOx(x) + (0x514)))   //pulldown
-#define GPIOSLR(x)														*((volatile uint32*)(GPIOx(x) + (0x518)))   //slew rate control
-#define GPIODEN(x)														*((volatile uint32*)(GPIOx(x) + (0x51C)))   //
-#define GPIOLOCK(x)														*((volatile uint32*)(GPIOx(x) + (0x520)))   //
-#define GPIOCR(x)															*((volatile uint32*)(GPIOx(x) + (0x524)))   //commit
-#define GPIOAMSEL(x)													*((volatile uint32*)(GPIOx(x) + (0x528)))   //
-#define GPIOPCTL(x)														*((volatile uint32*)(GPIOx(x) + (0x52C)))   //
-#define GPIOADCCTL(x)													*((volatile uint32*)(GPIOx(x) + (0x530)))   //
-#define GPIODMACTL(x)													*((volatile uint32*)(GPIOx(x) + (0x534)))   //
+#define RCGCGPIO				                      *((volatile uint32_t*)(SystemControl + (0x608)))    
+#define GPIODATA(x)			                      *((volatile uint32_t*)(GPIOx(x) + (0x000)))   //RW and is masked 0-255 addresses (bits 2-9) add them to address to apply mask
+#define GPIODIR(x)														*((volatile uint32_t*)(GPIOx(x) + (0x400)))   //direction; 0 input and 1 output
+#define GPIOIS(x)                             *((volatile uint32_t*)(GPIOx(x) + (0x404)))   //interrupt sense
+#define GPIOIBE(x)														*((volatile uint32_t*)(GPIOx(x) + (0x408)))   //interrupt sense
+#define GPIOIEV(x)														*((volatile uint32_t*)(GPIOx(x) + (0x40C)))   //interrupt event ....
+#define GPIOIM(x)															*((volatile uint32_t*)(GPIOx(x) + (0x410)))   //interrupt sense
+#define GPIORIS(x)														*((volatile uint32_t*)(GPIOx(x) + (0x414)))   //interrupt sense
+#define GPIOMIS(x)														*((volatile uint32_t*)(GPIOx(x) + (0x418)))   //interrup mask
+#define GPIOICR(x)                            *((volatile uint32_t*)(GPIOx(x) + (0x41C)))   //
+#define GPIOAFSEL(x)                          *((volatile uint32_t*)(GPIOx(x) + (0x420)))   //Alternate Function
+#define GPIODR2R(x)                           *((volatile uint32_t*)(GPIOx(x) + (0x500)))   //2mA
+#define GPIODR4R(x)                           *((volatile uint32_t*)(GPIOx(x) + (0x504)))   //4mA
+#define GPIODR8R(x)                           *((volatile uint32_t*)(GPIOx(x) + (0x508)))   //8mA
+#define GPIOODR(x)														*((volatile uint32_t*)(GPIOx(x) + (0x50C)))   //open-drain
+#define GPIOPUR(x)														*((volatile uint32_t*)(GPIOx(x) + (0x510)))   //pullup
+#define GPIOPDR(x)														*((volatile uint32_t*)(GPIOx(x) + (0x514)))   //pulldown
+#define GPIOSLR(x)														*((volatile uint32_t*)(GPIOx(x) + (0x518)))   //slew rate control
+#define GPIODEN(x)														*((volatile uint32_t*)(GPIOx(x) + (0x51C)))   //
+#define GPIOLOCK(x)														*((volatile uint32_t*)(GPIOx(x) + (0x520)))   //
+#define GPIOCR(x)															*((volatile uint32_t*)(GPIOx(x) + (0x524)))   //commit
+#define GPIOAMSEL(x)													*((volatile uint32_t*)(GPIOx(x) + (0x528)))   //
+#define GPIOPCTL(x)														*((volatile uint32_t*)(GPIOx(x) + (0x52C)))   //
+#define GPIOADCCTL(x)													*((volatile uint32_t*)(GPIOx(x) + (0x530)))   //
+#define GPIODMACTL(x)													*((volatile uint32_t*)(GPIOx(x) + (0x534)))   //
 
 
 
@@ -81,7 +83,7 @@ typedef enum
 
 typedef enum 
 {
-	PORT_PIN_OUTPUT, PORT_PIN_INPUT
+	PORT_PIN_INPUT=0, PORT_PIN_OUTPUT
 }EN_Port_PinDirectionType_t;
 
 typedef enum 
