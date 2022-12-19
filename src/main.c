@@ -1,50 +1,60 @@
 #include "BIT_MATH.h"
 #include "GPIO.h"
 #include "GPIO_cfg.h"
+#include "GPT.h"
+#include "GPT_cfg.h"
 
 void TEST_GPIO();
-extern const GPIO_ConfigType PortsConfig [PINS_NUM];
+void TEST_Timer();
+
 int main()
 {
-	Port_Init(PortsConfig);
 	//TEST_GPIO();
-	while(1)
-	{
-		
-		 
-	}
+	TEST_Timer();
+
+	
 }
 
 void TEST_GPIO()
 {
-	RCGCGPIO |= (1<<2);
-	int i=0;
-	for(i=0; i<100; i++);
-	
-	GPIOLOCK(2) = UNLOCK_VALUE;
-	GPIOCR(2) |= (15<<0);
-	
-	GPIODEN(2) |= (1<<1);
+	SET_BIT(RCGCGPIO, GPIO_PORT_F);
+	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
+	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);
+	while(1)
+	{
+		GPIODATA(GPIO_PORT_F, GPIO_PIN_1) ^= (1<<GPIO_PIN_1);
+		int i=0;
+		for(i=0; i<100; i++);
+		//CLR_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
+		//for(i=0; i<100; i++);
+	}
+}
 
-	GPIODEN(2) |= (1<<2);
-	GPIODEN(2) |= (1<<3);	
+void TEST_Timer()
+{
+	SET_BIT(RCGCGPIO, GPIO_PORT_F);
+	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
+	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);
 	
-	GPIOAFSEL(2) = 0x0;
-	GPIOAMSEL(2) = 0X0;
+	//Timer Initialization
+	SET_BIT(RCGCTIMER, TIMER_0_BIT);
 	
+	CLR_BIT(GPTMCTL(0), TAEN);
+	GPTMCFG(TIMER_0_BIT) = GPT_NORMAL_16_VALUE;
+	GPTMTAMR(TIMER_0_BIT) = PERIODIC_VALUE;
+	GPTMTAPR(TIMER_0_BIT) = 250-1;
+	GPTMTAILR(TIMER_0_BIT) = 64000-1;
+	SET_BIT(GPTMICR(TIMER_0_BIT), TATOCINT);
+	SET_BIT(GPTMIMR(TIMER_0_BIT) ,TATOIM);
 	
-	GPIODIR(2) |= (1<<1);
-	GPIODIR(2) |= (1<<2);
-	GPIODIR(2) |= (1<<3);
+	SET_BIT(GPTMCTL(0), TAEN);
 	
-	SET_BIT(GPIODATA(2, 1), 1);
-	SET_BIT(GPIODATA(2, 2), 2);
-	SET_BIT(GPIODATA(2, 3), 3);
-		
-	for(i=0; i<100; i++);
-		
-		
-	CLR_BIT(GPIODATA(2, 1), 1);
-	CLR_BIT(GPIODATA(2, 2), 2);
-	CLR_BIT(GPIODATA(2, 3), 3);
+	while(1)
+	{
+		if(GPTMMIS(0) & (1<<TATOMIS))
+		{
+			GPIODATA(GPIO_PORT_F, GPIO_PIN_1) ^= (1<<GPIO_PIN_1);
+			SET_BIT(GPTMICR(0), TATOCINT);
+		}
+	}
 }
