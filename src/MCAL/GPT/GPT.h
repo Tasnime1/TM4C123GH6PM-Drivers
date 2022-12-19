@@ -91,12 +91,7 @@
 
 /*- Timers order inside RCGCTIMER/RCGCWTIMER Registers
 *******************************************************/
-#define TIMER_5_BIT         5
-#define TIMER_4_BIT         4
-#define TIMER_3_BIT         3
-#define TIMER_2_BIT         2
-#define TIMER_1_BIT         1
-#define TIMER_0_BIT         0
+
 
 /*- Port Mux Control start bits in GPIOCTL register
 ****************************************************/
@@ -224,6 +219,11 @@ typedef enum
 {
 	GPT_ONE_SHOT_MODE, GPT_PERIODIC_MODE, GPT_CAPTURE_MODE
 }GPT_Mode;
+
+typedef enum
+{
+	TIMER_CHANNEL_0, TIMER_CHANNEL_1, TIMER_CHANNEL_2, TIMER_CHANNEL_3, TIMER_CHANNEL_4, TIMER_CHANNEL_5, TIMER_CHANNEL_6, TIMER_CHANNEL_7
+}GPT_Channel_Number;
 
 
 /*- APIs
