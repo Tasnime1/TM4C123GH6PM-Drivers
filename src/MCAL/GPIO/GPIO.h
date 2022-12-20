@@ -4,7 +4,7 @@
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
-*					File: GPIO.C
+*					File: GPIO.H
 *       Module: GPIO
 *		
 *	 Description: header file for all GPIO related registers and APIs
@@ -144,7 +144,6 @@ typedef struct
 	EN_GPIO_PortNum_t PortNum;
 	EN_GPIO_ChannelNum_t PinNum;
 }GPIO_ConfigType;
-
 
 
 

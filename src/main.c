@@ -3,16 +3,31 @@
 #include "GPIO_cfg.h"
 #include "GPT.h"
 #include "GPT_cfg.h"
+#include "IntCtrl.h"
+#include "IntCtrl_Config.h"
 
 void TEST_GPIO();
-void TEST_Timer();
+void TEST_Timer(uint32_t timee);
+void Timer_init();
+void Blink_test();
+void TEST_interrupt();
+extern const ST_IntCtrl_ConfigType_t IntsConfig [INTS_NUM];
 
 int main()
 {
-	//TEST_GPIO();
-	TEST_Timer();
-
+	//Blink_test();
 	
+	TEST_interrupt();
+}
+
+void GPIOF_Handler(void)
+{	
+  if (GPIOMIS(GPIO_PORT_F) & 0x01) /* check if interrupt causes by PF4/SW1*/
+    {   
+      GPIODATA(GPIO_PORT_F, 1) ^= (1<<1);
+      GPIOICR(GPIO_PORT_F) |= 0x01; /* clear the interrupt flag */
+     } 
+
 }
 
 void TEST_GPIO()
@@ -20,42 +35,97 @@ void TEST_GPIO()
 	SET_BIT(RCGCGPIO, GPIO_PORT_F);
 	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
 	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);
-	while(1)
+	/**while(1)
 	{
 		TOGGLE_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
 		int i=0;
 		for(i=0; i<100; i++);
-	}
+	}**/
 }
 
 //Timers work up to channel 3; channels 4 and 5 don't blink the LED!!
 //1 second delay test
-void TEST_Timer()
+void TEST_Timer(uint32_t timee)
+{
+	/**SET_BIT(RCGCGPIO, GPIO_PORT_F);
+	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
+	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);**/
+	/**
+	//Timer Initialization
+	SET_BIT(RCGCTIMER, TIMER_CHANNEL_0);
+	
+	CLR_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
+	
+	GPTMCFG(TIMER_CHANNEL_0) = GPT_NORMAL_16_VALUE;
+	GPTMTAMR(TIMER_CHANNEL_0) = PERIODIC_VALUE;
+	GPTMTAPR(TIMER_CHANNEL_0) = 250-1;
+	GPTMTAILR(TIMER_CHANNEL_0) = 64000-1;
+	SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
+	SET_BIT(GPTMIMR(TIMER_CHANNEL_0) ,TATOIM);	
+	SET_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
+	**/
+		int i=0;
+		for( i=0; i<timee; i++)
+		{
+		while((GPTMMIS(TIMER_CHANNEL_0) & (1<<TATOMIS))==0);
+		SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
+		}
+}
+
+void Timer_init()
+{
+	//Timer Initialization
+	SET_BIT(RCGCTIMER, TIMER_CHANNEL_0);
+	
+	CLR_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
+	
+	GPTMCFG(TIMER_CHANNEL_0) = GPT_NORMAL_16_VALUE;
+	GPTMTAMR(TIMER_CHANNEL_0) = PERIODIC_VALUE;
+	GPTMTAPR(TIMER_CHANNEL_0) = 250-1;
+	GPTMTAILR(TIMER_CHANNEL_0) = 64000-1;
+	SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
+	SET_BIT(GPTMIMR(TIMER_CHANNEL_0) ,TATOIM);	
+	SET_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
+
+}
+
+void Blink_test()
+{
+	TEST_GPIO();
+	Timer_init();
+	while(1)
+	{
+		SET_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
+		TEST_Timer(3);
+		CLR_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
+		TEST_Timer(5);
+	}
+}
+
+void TEST_interrupt()
 {
 	SET_BIT(RCGCGPIO, GPIO_PORT_F);
-	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
+	
+	GPIOLOCK(GPIO_PORT_F) = UNLOCK_VALUE;
+	GPIOCR(GPIO_PORT_F) = 0XFF;
+	GPIOLOCK(GPIO_PORT_F) = 0;
+	
+	CLR_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_0); //switch 2 as input
+	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1); //led 1 as output
 	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);
+	SET_BIT(GPIOPUR(GPIO_PORT_F), GPIO_PIN_0);
 	
-	//Timer Initialization
-	SET_BIT(RCGCTIMER, TIMER_CHANNEL_3);
-	
-	CLR_BIT(GPTMCTL(TIMER_CHANNEL_3), TAEN);
-	
-	GPTMCFG(TIMER_CHANNEL_3) = GPT_NORMAL_16_VALUE;
-	GPTMTAMR(TIMER_CHANNEL_3) = PERIODIC_VALUE;
-	GPTMTAPR(TIMER_CHANNEL_3) = 250-1;
-	GPTMTAILR(TIMER_CHANNEL_3) = 64000-1;
-	SET_BIT(GPTMICR(TIMER_CHANNEL_3), TATOCINT);
-	SET_BIT(GPTMIMR(TIMER_CHANNEL_3) ,TATOIM);
-	
-	SET_BIT(GPTMCTL(TIMER_CHANNEL_3), TAEN);
+	//enabling interrupt
+	CLR_BIT(GPIOIS(GPIO_PORT_F), GPIO_PIN_0 );
+	CLR_BIT(GPIOIBE(GPIO_PORT_F), GPIO_PIN_0 );
+	CLR_BIT(GPIOIEV(GPIO_PORT_F), GPIO_PIN_0 );
+	SET_BIT(GPIOICR(GPIO_PORT_F), GPIO_PIN_0 );
+	SET_BIT(GPIOIM(GPIO_PORT_F), GPIO_PIN_0 );
+	PRIx(30) = 3<<5;
+	ENx(30) |= (1<<30);
 	
 	while(1)
 	{
-		if(GPTMMIS(TIMER_CHANNEL_3) & (1<<TATOMIS))
-		{
-			TOGGLE_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
-			SET_BIT(GPTMICR(TIMER_CHANNEL_3), TATOCINT);
-		}
+	
 	}
 }
