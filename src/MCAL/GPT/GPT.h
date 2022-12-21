@@ -228,20 +228,21 @@ typedef enum
 	TIMER_CHANNEL_6, TIMER_CHANNEL_7, TIMER_CHANNEL_8, TIMER_CHANNEL_9, TIMER_CHANNEL_10, TIMER_CHANNEL_11 
 }GPT_Channel_Number;
 
-typedef uint32_t maxTickValue_t;
+typedef uint32_t delayTimeSeconds_t;
 
 typedef struct
 {
 	GPT_Channel_Number      ChannelId;
 	GPT_Mode								ChannelMode;
 	GPT_TimerLength					ChannelLength;
+	
 }GPT_ConfigType;
 
 /*- APIs
 ***************************************************************************************/
 void Gpt_Init (const GPT_ConfigType* ConfigPtr);
-void Gpt_StartTimer (EN_GPIO_ChannelNum_t ChannelId, maxTickValue_t MaxTickValue);
-void Gpt_StopTimer (EN_GPIO_ChannelNum_t ChannelId);
+void Gpt_StartTimer (GPT_Channel_Number ChannelId, delayTimeSeconds_t seconds);
+void Gpt_StopTimer (GPT_Channel_Number ChannelId);
 
 
 #endif /* GPT.H */

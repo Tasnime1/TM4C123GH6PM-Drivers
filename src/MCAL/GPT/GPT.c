@@ -14,19 +14,19 @@ void Gpt_Init (const GPT_ConfigType* ConfigPtr)
 		switch(ConfigPtr[u8_TimerCounter].ChannelLength)
 		{
 			case GPT_NORMAL_16:
-				GPTMCFG(ChannelId) = GPT_NORMAL_16_VALUE;
+				GPTMCFG(ChannelId) |= (GPT_NORMAL_16_VALUE<<GPTMCFG_START_BIT);
 				break;
 			
 			case GPT_NORMAL_32:
-				GPTMCFG(ChannelId) = GPT_NORMAL_32_VALUE;
+				GPTMCFG(ChannelId) |= (GPT_NORMAL_32_VALUE<<GPTMCFG_START_BIT);
 				break;
 			
 			case GPT_WIDE_32:
-				GPTMCFG(ChannelId) = GPT_WIDE_32_VALUE;
+				GPTMCFG(ChannelId) |= (GPT_WIDE_32_VALUE<<GPTMCFG_START_BIT);
 				break;
 			
 			case GPT_WIDE_64:
-				GPTMCFG(ChannelId) = GPT_WIDE_64_VALUE;
+				GPTMCFG(ChannelId) |= (GPT_WIDE_64_VALUE<<GPTMCFG_START_BIT);
 				break;
 			
 			default:
@@ -55,16 +55,21 @@ void Gpt_Init (const GPT_ConfigType* ConfigPtr)
 		SET_BIT(GPTMICR(ChannelId), TATOCINT);
 		SET_BIT(GPTMIMR(ChannelId) ,TATOIM);
 		
-		SET_BIT(GPTMCTL(ChannelId), TAEN);
 	}
 }
 
-void Gpt_StartTimer (EN_GPIO_ChannelNum_t ChannelId, maxTickValue_t MaxTickValue)
+void Gpt_StartTimer (GPT_Channel_Number ChannelId, delayTimeSeconds_t seconds)
 {
 	SET_BIT(GPTMCTL(ChannelId), TAEN);
+	uint8_t timer=0;
+	for( timer=0; timer<seconds; timer++)
+	{
+		while((GPTMMIS(TIMER_CHANNEL_0) & (1<<TATOMIS))==0);
+		SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
+	}
 }
 
-void Gpt_StopTimer (EN_GPIO_ChannelNum_t ChannelId)
+void Gpt_StopTimer (GPT_Channel_Number ChannelId)
 {
 	CLR_BIT(GPTMCTL(ChannelId), TAEN);
 }

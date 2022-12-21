@@ -1,8 +1,11 @@
 #include "GPT_cfg.h"
 
-const GPT_ConfigType Gpt_TimersConfig[TIMERS_NUM] =
+const GPT_ConfigType Gpt_TimersConfigPtr[TIMERS_NUM] =
 {
 	{TIMER_CHANNEL_0, GPT_PERIODIC_MODE, GPT_NORMAL_32},
 	{TIMER_CHANNEL_1, GPT_PERIODIC_MODE, GPT_NORMAL_32},
 	{TIMER_CHANNEL_2, GPT_PERIODIC_MODE, GPT_NORMAL_32}
 };
+
+uint8_t onTime = 3;
+uint8_t offTime = 3;

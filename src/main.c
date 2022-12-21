@@ -7,18 +7,21 @@
 #include "IntCtrl_Config.h"
 
 void TEST_GPIO();
-void TEST_Timer(uint32_t timee);
+
 void Timer_init();
+void TEST_Timer();
+
 void Blink_test();
+
 void TEST_interrupt();
 
 extern const ST_IntCtrl_ConfigType_t IntCtrlConfigPtr[INTS_NUM];
-extern const GPIO_ConfigType PortsConfig [PINS_NUM];
-extern const GPT_ConfigType Gpt_TimersConfig[TIMERS_NUM];
+extern const GPIO_ConfigType PortsConfigPtr [PINS_NUM];
+extern const GPT_ConfigType Gpt_TimersConfigPtr[TIMERS_NUM];
 
 
-static uint8_t onTime=3;
-static uint8_t offTime=3;
+extern uint8_t onTime;
+extern uint8_t offTime;
 
 static uint8_t switch_pin0_pressed = 0;
 static uint8_t switch_pin4_pressed = 0;
@@ -27,15 +30,17 @@ static uint8_t counter =0;
 
 int main()
 {
-	GPIO_Init(PortsConfig);
+	GPIO_Init(PortsConfigPtr);
 	IntCtrl_Init(IntCtrlConfigPtr);
+	Gpt_Init(Gpt_TimersConfigPtr);
 	
 	while(1)
 	{
 		SET_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
-		TEST_Timer(onTime);
+		Gpt_StartTimer(TIMER_CHANNEL_0 , onTime);
+		
 		CLR_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
-		TEST_Timer(offTime);
+		Gpt_StartTimer(TIMER_CHANNEL_1, offTime);
 	}
 }
 
@@ -90,31 +95,9 @@ void TEST_GPIO()
 	}
 }
 
+
 //Timers work up to channel 3; channels 4 and 5 don't blink the LED!!
 //1 second delay test
-void TEST_Timer(uint32_t timee)
-{
-	//Timer Initialization
-	SET_BIT(RCGCTIMER, TIMER_CHANNEL_0);
-	
-	CLR_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
-	
-	GPTMTAMR(TIMER_CHANNEL_0) = (PERIODIC_TIMER_MODE<<TAMR_START_BIT);
-	GPTMCFG(TIMER_CHANNEL_0) |= (GPT_NORMAL_32_VALUE<<GPTMCFG_START_BIT);
-	GPTMTAPR(TIMER_CHANNEL_0) = 250-1;
-	GPTMTAILR(TIMER_CHANNEL_0) = 64000-1;
-	SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
-	SET_BIT(GPTMIMR(TIMER_CHANNEL_0) ,TATOIM);	
-	SET_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
-	
-		int i=0;
-		for( i=0; i<timee; i++)
-		{
-		while((GPTMMIS(TIMER_CHANNEL_0) & (1<<TATOMIS))==0);
-		SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
-		}
-}
-
 void Timer_init()
 {
 	//Timer Initialization
@@ -133,16 +116,29 @@ void Timer_init()
 
 }
 
+void TEST_Timer()
+{
+		Timer_init();
+	
+		int i=0;
+		for( i=0; i<onTime; i++)
+		{
+		while((GPTMMIS(TIMER_CHANNEL_0) & (1<<TATOMIS))==0);
+		SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
+		}
+}
+
+
 void Blink_test()
 {
-	//TEST_GPIO();
+	TEST_GPIO();
 	Timer_init();
 	while(1)
 	{
 		SET_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
-		TEST_Timer(3);
+		TEST_Timer();
 		CLR_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
-		TEST_Timer(5);
+		TEST_Timer();
 	}
 }
 
