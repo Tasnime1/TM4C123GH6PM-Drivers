@@ -134,10 +134,7 @@
 
 /*- GPTMTBMR Bits and Modes
 ********************************************/
-#define TBMR_START_BIT  	 					0
-#define ONE_SHOT_VALUE		  				0X1
-#define PERIODIC_VALUE	  					0X2
-#define CAPTURE_VALUE								0X3
+#define TBMR_START_BIT  	 						0
 
 #define TBCMR								   				2
 #define TBAMS								   				3
@@ -222,13 +219,29 @@ typedef enum
 
 typedef enum
 {
-	TIMER_CHANNEL_0, TIMER_CHANNEL_1, TIMER_CHANNEL_2, TIMER_CHANNEL_3, TIMER_CHANNEL_4, TIMER_CHANNEL_5, TIMER_CHANNEL_6, TIMER_CHANNEL_7
+	GPT_16MHz, GPT_100KHz
+}GPT_ChannelFreq;
+
+typedef enum
+{
+	TIMER_CHANNEL_0, TIMER_CHANNEL_1, TIMER_CHANNEL_2, TIMER_CHANNEL_3, TIMER_CHANNEL_4, TIMER_CHANNEL_5,
+	TIMER_CHANNEL_6, TIMER_CHANNEL_7, TIMER_CHANNEL_8, TIMER_CHANNEL_9, TIMER_CHANNEL_10, TIMER_CHANNEL_11 
 }GPT_Channel_Number;
 
+typedef uint32_t maxTickValue_t;
+
+typedef struct
+{
+	GPT_Channel_Number      ChannelId;
+	GPT_Mode								ChannelMode;
+	GPT_TimerLength					ChannelLength;
+}GPT_ConfigType;
 
 /*- APIs
 ***************************************************************************************/
-//void Timer_Init (const GPT_ConfigType* ConfigPtr);
+void Gpt_Init (const GPT_ConfigType* ConfigPtr);
+void Gpt_StartTimer (EN_GPIO_ChannelNum_t ChannelId, maxTickValue_t MaxTickValue);
+void Gpt_StopTimer (EN_GPIO_ChannelNum_t ChannelId);
 
 
 #endif /* GPT.H */

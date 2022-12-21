@@ -17,7 +17,7 @@
 /*- FUNCTIONS' DECLARATION
 ***************************************************************************************/
 
-void Port_Init (const GPIO_ConfigType* ConfigPtr)
+void GPIO_Init (const GPIO_ConfigType* ConfigPtr)
 {
 	//check if null ptr or not; if yes warning message and return for example
 	if(ConfigPtr == NULL)

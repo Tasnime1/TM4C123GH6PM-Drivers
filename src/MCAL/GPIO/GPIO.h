@@ -120,7 +120,7 @@ typedef enum
 typedef enum 
 {
 	//TO-DO: State all types here
-	GPIO_DEN, GPIO_UART, GPIO_SPI, GPIO_I2C
+	GPIO_DEN, GPIO_UART, GPIO_SPI, GPIO_I2C, GPIO_TIMER
 }EN_GPIO_PinModeType_t;
 
 typedef enum 

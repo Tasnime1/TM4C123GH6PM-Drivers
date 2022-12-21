@@ -14,29 +14,66 @@ void TEST_interrupt();
 
 extern const ST_IntCtrl_ConfigType_t IntCtrlConfigPtr[INTS_NUM];
 extern const GPIO_ConfigType PortsConfig [PINS_NUM];
-	
+extern const GPT_ConfigType Gpt_TimersConfig[TIMERS_NUM];
+
+
+static uint8_t onTime=3;
+static uint8_t offTime=3;
+
+static uint8_t switch_pin0_pressed = 0;
+static uint8_t switch_pin4_pressed = 0;
+
+static uint8_t counter =0;
+
 int main()
 {
-	//Blink_test();
-	//TEST_GPIO();
-	TEST_interrupt();
+	GPIO_Init(PortsConfig);
+	IntCtrl_Init(IntCtrlConfigPtr);
 	
-
+	while(1)
+	{
+		SET_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
+		TEST_Timer(onTime);
+		CLR_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
+		TEST_Timer(offTime);
+	}
 }
 
 void GPIOF_Handler(void)
 {	
   if (GPIOMIS(GPIO_PORT_F) & (1<<GPIO_PIN_0)) /* check if interrupt causes by PF4/SW1*/
-    {   
-      GPIODATA(GPIO_PORT_F, GPIO_PIN_1) ^= (1<<GPIO_PIN_1);
+    {
       GPIOICR(GPIO_PORT_F) |= (1<<GPIO_PIN_0); /* clear the interrupt flag */
+			if(switch_pin4_pressed)
+			{
+				switch_pin0_pressed = 0;
+				switch_pin4_pressed = 0;
+				offTime = counter;
+				counter = 0;
+			}
+			else
+			{
+				counter ++;
+				switch_pin0_pressed = 1;
+			}
      } 
 		
 	if (GPIOMIS(GPIO_PORT_F) & (1<<GPIO_PIN_4)) /* check if interrupt causes by PF4/SW1*/
-    {   
-      GPIODATA(GPIO_PORT_F, GPIO_PIN_2) ^= (1<<GPIO_PIN_2);
-      GPIOICR(GPIO_PORT_F) |= (1<<GPIO_PIN_4); /* clear the interrupt flag */
-     } 
+  { 
+		GPIOICR(GPIO_PORT_F) |= (1<<GPIO_PIN_4); /* clear the interrupt flag */
+		if(switch_pin0_pressed)
+			{
+				switch_pin0_pressed = 0;
+				switch_pin4_pressed = 0;
+				onTime = counter;
+				counter = 0;
+			}
+			else
+			{
+				counter ++;
+				switch_pin4_pressed = 1;
+			}
+  } 
 
 }
 
@@ -57,23 +94,19 @@ void TEST_GPIO()
 //1 second delay test
 void TEST_Timer(uint32_t timee)
 {
-	/**SET_BIT(RCGCGPIO, GPIO_PORT_F);
-	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
-	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);**/
-	/**
 	//Timer Initialization
 	SET_BIT(RCGCTIMER, TIMER_CHANNEL_0);
 	
 	CLR_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
 	
-	GPTMCFG(TIMER_CHANNEL_0) = GPT_NORMAL_16_VALUE;
-	GPTMTAMR(TIMER_CHANNEL_0) = PERIODIC_VALUE;
+	GPTMTAMR(TIMER_CHANNEL_0) = (PERIODIC_TIMER_MODE<<TAMR_START_BIT);
+	GPTMCFG(TIMER_CHANNEL_0) |= (GPT_NORMAL_32_VALUE<<GPTMCFG_START_BIT);
 	GPTMTAPR(TIMER_CHANNEL_0) = 250-1;
 	GPTMTAILR(TIMER_CHANNEL_0) = 64000-1;
 	SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
 	SET_BIT(GPTMIMR(TIMER_CHANNEL_0) ,TATOIM);	
 	SET_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
-	**/
+	
 		int i=0;
 		for( i=0; i<timee; i++)
 		{
@@ -89,19 +122,20 @@ void Timer_init()
 	
 	CLR_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
 	
-	GPTMCFG(TIMER_CHANNEL_0) = GPT_NORMAL_16_VALUE;
-	GPTMTAMR(TIMER_CHANNEL_0) = PERIODIC_VALUE;
+	GPTMCFG(TIMER_CHANNEL_0) |= (GPT_NORMAL_16_VALUE<<GPTMCFG_START_BIT);
+	GPTMTAMR(TIMER_CHANNEL_0) = PERIODIC_TIMER_MODE;
 	GPTMTAPR(TIMER_CHANNEL_0) = 250-1;
 	GPTMTAILR(TIMER_CHANNEL_0) = 64000-1;
 	SET_BIT(GPTMICR(TIMER_CHANNEL_0), TATOCINT);
 	SET_BIT(GPTMIMR(TIMER_CHANNEL_0) ,TATOIM);	
+	
 	SET_BIT(GPTMCTL(TIMER_CHANNEL_0), TAEN);
 
 }
 
 void Blink_test()
 {
-	TEST_GPIO();
+	//TEST_GPIO();
 	Timer_init();
 	while(1)
 	{
