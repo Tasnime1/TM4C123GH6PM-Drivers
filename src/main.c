@@ -11,21 +11,31 @@ void TEST_Timer(uint32_t timee);
 void Timer_init();
 void Blink_test();
 void TEST_interrupt();
-extern const ST_IntCtrl_ConfigType_t IntsConfig [INTS_NUM];
 
+extern const ST_IntCtrl_ConfigType_t IntCtrlConfigPtr[INTS_NUM];
+extern const GPIO_ConfigType PortsConfig [PINS_NUM];
+	
 int main()
 {
 	//Blink_test();
-	
+	//TEST_GPIO();
 	TEST_interrupt();
+	
+
 }
 
 void GPIOF_Handler(void)
 {	
-  if (GPIOMIS(GPIO_PORT_F) & 0x01) /* check if interrupt causes by PF4/SW1*/
+  if (GPIOMIS(GPIO_PORT_F) & (1<<GPIO_PIN_0)) /* check if interrupt causes by PF4/SW1*/
     {   
-      GPIODATA(GPIO_PORT_F, 1) ^= (1<<1);
-      GPIOICR(GPIO_PORT_F) |= 0x01; /* clear the interrupt flag */
+      GPIODATA(GPIO_PORT_F, GPIO_PIN_1) ^= (1<<GPIO_PIN_1);
+      GPIOICR(GPIO_PORT_F) |= (1<<GPIO_PIN_0); /* clear the interrupt flag */
+     } 
+		
+	if (GPIOMIS(GPIO_PORT_F) & (1<<GPIO_PIN_4)) /* check if interrupt causes by PF4/SW1*/
+    {   
+      GPIODATA(GPIO_PORT_F, GPIO_PIN_2) ^= (1<<GPIO_PIN_2);
+      GPIOICR(GPIO_PORT_F) |= (1<<GPIO_PIN_4); /* clear the interrupt flag */
      } 
 
 }
@@ -35,12 +45,12 @@ void TEST_GPIO()
 	SET_BIT(RCGCGPIO, GPIO_PORT_F);
 	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1);
 	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);
-	/**while(1)
+	while(1)
 	{
 		TOGGLE_BIT(GPIODATA(GPIO_PORT_F, GPIO_PIN_1), GPIO_PIN_1);
 		int i=0;
 		for(i=0; i<100; i++);
-	}**/
+	}
 }
 
 //Timers work up to channel 3; channels 4 and 5 don't blink the LED!!
@@ -110,22 +120,17 @@ void TEST_interrupt()
 	GPIOCR(GPIO_PORT_F) = 0XFF;
 	GPIOLOCK(GPIO_PORT_F) = 0;
 	
-	CLR_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_0); //switch 2 as input
+	CLR_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_0); //switch 0 as input
+	SET_BIT(GPIOPUR(GPIO_PORT_F), GPIO_PIN_0);
+	CLR_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_4); //switch 4 as input
+	SET_BIT(GPIOPUR(GPIO_PORT_F), GPIO_PIN_4);
+	
 	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_1); //led 1 as output
 	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_1);
-	SET_BIT(GPIOPUR(GPIO_PORT_F), GPIO_PIN_0);
+	SET_BIT(GPIODIR(GPIO_PORT_F), GPIO_PIN_2); //led 2 as output
+	SET_BIT(GPIODEN(GPIO_PORT_F), GPIO_PIN_2);
 	
-	//enabling interrupt
-	CLR_BIT(GPIOIS(GPIO_PORT_F), GPIO_PIN_0 );
-	CLR_BIT(GPIOIBE(GPIO_PORT_F), GPIO_PIN_0 );
-	CLR_BIT(GPIOIEV(GPIO_PORT_F), GPIO_PIN_0 );
-	SET_BIT(GPIOICR(GPIO_PORT_F), GPIO_PIN_0 );
-	SET_BIT(GPIOIM(GPIO_PORT_F), GPIO_PIN_0 );
-	PRIx(30) = 3<<5;
-	ENx(30) |= (1<<30);
-	
-	while(1)
-	{
-	
-	}
+	//congig interrupt
+	IntCtrl_Init(IntCtrlConfigPtr);
+
 }

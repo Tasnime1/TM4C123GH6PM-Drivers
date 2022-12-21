@@ -36,10 +36,14 @@ void Port_Init (const GPIO_ConfigType* ConfigPtr)
 			
 		//Step0: Initiate Clock-> RCGCGPIO -> 6 pins for GPIOs A->F
 		SET_BIT(RCGCGPIO, PortNum);
+		
 		//change to timer delay!
 		int i;
 		for(i=0; i<100; i++);
-		GPIOLOCK(PortNum) = UNLOCK_VALUE;
+		
+		GPIOLOCK(GPIO_PORT_F) = UNLOCK_VALUE;
+		GPIOCR(GPIO_PORT_F) = 0XFF;
+		GPIOLOCK(GPIO_PORT_F) = 0;
 		
 		//Step1: Set pin mode, DEN, UART...etc
 		//----------------------------------------------ONLY DEN IS SUPPORTED------------------------------------------------

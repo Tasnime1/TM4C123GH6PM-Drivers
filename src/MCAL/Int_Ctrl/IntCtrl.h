@@ -19,7 +19,7 @@
 #include "BIT_MATH.h"
 #include "IntCtrl_Config.h"
 #include "stdio.h"
-
+#include "GPIO.h"
 
 
 
@@ -52,29 +52,49 @@
 typedef enum
 {
 	USE_8_GROUPS_0_SUBGROUPS = 4, USE_4_GROUPS_2_SUBGROUPS, USE_2_GROUPS_4_SUBGROUPS, USE_0_GROUPS_8_SUBGROUPS
-}EN_GroupSubGroupType_t;
+}EN_IntCtrl_GroupSubGroupType_t;
 
-typedef uint8_t InterruptNum_t;
+typedef enum
+{
+	INTCTRL_PORTA_INT_NUM=0, INTCTRL_PORTB_INT_NUM, INTCTRL_PORTC_INT_NUM, 
+	INTCTRL_PORTD_INT_NUM, INTCTRL_PORTE_INT_NUM, INTCTRL_PORTF_INT_NUM=30
+}EN_IntCtrl_PortsIntNum_t;
+
+typedef enum
+{
+	INTCTRL_LEVEL_TRIGGERED, INTCTRL_EDGE_TRIGGERED
+}En_IntCtrl_InterruptSense;
+
+typedef enum
+{
+	INTCTRL_FALLING, INTCTRL_RISING, INTCTRL_BOTH_EDGES
+}En_IntCtrl_InterruptChangeType;
+
+
 typedef uint8_t InterruptPriority_t;
 
 typedef struct
 {
-	InterruptNum_t IntNum;
-	InterruptPriority_t IntPriority;
-	EN_GroupSubGroupType_t GroupSubGroupNum;
+	EN_IntCtrl_PortsIntNum_t 							IntNum;
+	InterruptPriority_t 									IntPriority;
+	EN_IntCtrl_GroupSubGroupType_t 				GroupSubGroupPriority;
+	En_IntCtrl_InterruptSense      				IntCtrlSense;
+	En_IntCtrl_InterruptChangeType				IntChangeType;
+	EN_GPIO_PortNum_t											PortNum;
+	EN_GPIO_ChannelNum_t									PinNum;
 }ST_IntCtrl_ConfigType_t;
 
 
 
 /*- FUNCTIONS' PROTOTYPES
 ***************************************************************************************/
-void IntCtrl_SetPriorityGrouping(EN_GroupSubGroupType_t PriorityGroupSubGroup);
-void IntCtrl_SetPriority(InterruptNum_t IntNum, uint8_t IntPriority);
-void IntCtrl_EnableInterrupt(InterruptNum_t IntNum);
-void IntCtrl_DisableInterrupt(InterruptNum_t IntNum);
+void IntCtrl_SetPriorityGrouping(EN_IntCtrl_GroupSubGroupType_t PriorityGroupSubGroup);
+void IntCtrl_SetPriority(EN_IntCtrl_PortsIntNum_t IntNum, uint8_t IntPriority);
+void IntCtrl_EnableInterrupt(EN_IntCtrl_PortsIntNum_t IntNum);
+void IntCtrl_DisableInterrupt(EN_IntCtrl_PortsIntNum_t IntNum);
 
 /* APIs
 ****************************************************************************************/
-void IntCtrl_Init();
+void IntCtrl_Init(const ST_IntCtrl_ConfigType_t* IntCtrlConfigPtr);
 
 #endif /* INTCTRL.H */
