@@ -1,10 +1,10 @@
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
-*					File: GPIO.H
+*					File: GPIO.C
 *       Module: GPIO
 *		
-*	 Description: header file for all GPIO related registers and APIs
+*	 Description: Source file for all GPIO related registers and APIs
 *
 *
 ***************************************************************************************/
@@ -127,3 +127,33 @@ void GPIO_Init (const GPIO_ConfigType* ConfigPtr)
 		
 	}
 }
+
+
+
+EN_GPIO_ChannelLevelType_t GPIO_ReadChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId)
+{
+	return ( (GPIODATA(GPIOId, ChannelId)) & (1<<ChannelId));
+}
+
+
+
+void GPIO_WriteChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId, EN_GPIO_ChannelLevelType_t Level)
+{
+	if(Level == GPIO_PIN_HIGH)
+	{
+		SET_BIT(GPIODATA(GPIOId, ChannelId), ChannelId);
+	}
+	else
+	{
+		CLR_BIT(GPIODATA(GPIOId, ChannelId), ChannelId);
+	}
+}	
+
+
+
+EN_GPIO_ChannelLevelType_t GPIO_FlipChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId)
+{
+	TOGGLE_BIT(GPIODATA(GPIOId, ChannelId), ChannelId);
+	return ( (GPIODATA(GPIOId, ChannelId)) & (1<<ChannelId) );
+}
+

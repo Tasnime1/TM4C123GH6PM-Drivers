@@ -4,10 +4,10 @@
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
-*					File: GPIO.C
-*       Module: GPIO
+*					File: GPT.H
+*       Module: GPT
 *		
-*	 Description: header file for all GPIO related registers and APIs
+*	 Description: header file for all GPT related registers and APIs
 *
 *
 ***************************************************************************************/

@@ -154,8 +154,9 @@ void GPIO_Init (const GPIO_ConfigType* ConfigPtr);
 EN_GPIO_ChannelLevelType_t GPIO_ReadChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId);
 void GPIO_WriteChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId, EN_GPIO_ChannelLevelType_t Level);
 EN_GPIO_ChannelLevelType_t GPIO_FlipChannel (EN_GPIO_PortNum_t GPIOId, EN_GPIO_ChannelNum_t ChannelId);
-GPIO_LevelType_t GPIO_ReadPort (EN_GPIO_PortNum_t GPIOId);
-void GPIO_WritePort (EN_GPIO_PortNum_t GPIOId, GPIO_LevelType_t Level);
+
+//GPIO_LevelType_t GPIO_ReadPort (EN_GPIO_PortNum_t GPIOId);
+//void GPIO_WritePort (EN_GPIO_PortNum_t GPIOId, GPIO_LevelType_t Level);
 
 
 #endif /* GPIO.H */
