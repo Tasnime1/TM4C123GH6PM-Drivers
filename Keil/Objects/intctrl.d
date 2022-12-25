@@ -1,0 +1,10 @@
+.\objects\intctrl.o: ..\src\MCAL\Int_Ctrl\IntCtrl.c
+.\objects\intctrl.o: ..\src\MCAL\Int_Ctrl\IntCtrl.h
+.\objects\intctrl.o: ..\src\Service\types.h
+.\objects\intctrl.o: ..\src\Service\BIT_MATH.h
+.\objects\intctrl.o: ..\src\MCAL\Int_Ctrl\IntCtrl_cfg.h
+.\objects\intctrl.o: ..\src\MCAL\Int_Ctrl\IntCtrl.h
+.\objects\intctrl.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\intctrl.o: ..\src\MCAL\GPIO\GPIO.h
+.\objects\intctrl.o: ..\src\MCAL\GPIO\GPIO_cfg.h
+.\objects\intctrl.o: ..\src\MCAL\GPIO\GPIO.h

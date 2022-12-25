@@ -5,7 +5,7 @@
 *					File: GPT.C
 *       Module: GPT
 *		
-*	 Description: header file for all GPT related registers and APIs
+*	 Description: Source file for all GPT related registers and APIs
 *
 *
 ***************************************************************************************/

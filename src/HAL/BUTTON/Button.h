@@ -1,27 +1,22 @@
-#ifndef BUTTON_H
-#define BUTTON_H
-
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
 *					File: BUTTON.H
 *       Module: BUTTON
 *		
-*	 Description: header file for all BUTTON related functionalities
-*
+*	 Description: Header file for all BUTTON related functionalities
 *
 ***************************************************************************************/
+
+#ifndef BUTTON_H
+#define BUTTON_H
+
 
 
 /*- INCLUDES
 ***************************************************************************************/
 #include "GPIO.h"
 
-/*- CALLBACK FUNCTION AND TYPEDEF
-***************************************************************************************/
-
-typedef void(*cb_type)(void);
-void Buttons_cb(cb_type ptr);
 
 /*- APIs
 ***************************************************************************************/

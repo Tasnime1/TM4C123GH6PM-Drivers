@@ -1,5 +1,3 @@
-#include "LED.h"
-
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
@@ -10,6 +8,12 @@
 *
 *
 ***************************************************************************************/
+
+
+/*- INCLUDES
+***************************************************************************************/
+#include "LED.h"
+
 
 /*- APIs DECLARATIONS
 ***************************************************************************************/
@@ -30,7 +34,7 @@ void LED_Off (EN_GPIO_PortNum_t PortId, EN_GPIO_ChannelNum_t LEDId)
 	GPIO_WriteChannel(PortId, LEDId, GPIO_PIN_LOW);
 }
 
-EN_GPIO_ChannelLevelType_t LED_FlipLED (EN_GPIO_PortNum_t PortId, EN_GPIO_ChannelNum_t LEDId)
+EN_GPIO_ChannelLevelType_t LED_Toggle (EN_GPIO_PortNum_t PortId, EN_GPIO_ChannelNum_t LEDId)
 {
 	return GPIO_FlipChannel(PortId, LEDId);
 }

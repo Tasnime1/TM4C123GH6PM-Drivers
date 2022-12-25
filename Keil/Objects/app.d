@@ -1,0 +1,17 @@
+.\objects\app.o: ..\src\APP\App.c
+.\objects\app.o: ..\src\APP\APP.h
+.\objects\app.o: ..\src\Service\BIT_MATH.h
+.\objects\app.o: ..\src\MCAL\GPIO\GPIO.h
+.\objects\app.o: ..\src\Service\types.h
+.\objects\app.o: ..\src\MCAL\GPIO\GPIO_cfg.h
+.\objects\app.o: ..\src\MCAL\GPIO\GPIO.h
+.\objects\app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\app.o: ..\src\MCAL\GPT\GPT.h
+.\objects\app.o: ..\src\MCAL\GPT\GPT_cfg.h
+.\objects\app.o: ..\src\MCAL\GPT\GPT.h
+.\objects\app.o: ..\src\MCAL\Int_Ctrl\IntCtrl.h
+.\objects\app.o: ..\src\MCAL\Int_Ctrl\IntCtrl_cfg.h
+.\objects\app.o: ..\src\MCAL\Int_Ctrl\IntCtrl.h
+.\objects\app.o: ..\src\HAL\LED\LED.h
+.\objects\app.o: ..\src\HAL\BUTTON\Button.h
+.\objects\app.o: ..\src\MCAL\SysTick\SysTick.h

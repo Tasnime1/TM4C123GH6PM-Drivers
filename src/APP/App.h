@@ -7,7 +7,7 @@
 *					File: APP.H
 *       Module: APP
 *		
-*	 Description: header file for all APP-related functionalities
+*	 Description: Header file for all APP-related functions' prototypes and inclusions
 *
 *
 ***************************************************************************************/
@@ -21,14 +21,16 @@
 #include "GPT.h"
 #include "GPT_cfg.h"
 #include "IntCtrl.h"
-#include "IntCtrl_Config.h"
+#include "IntCtrl_cfg.h"
 #include "LED.h"
 #include "Button.h"
+#include "SysTick.h"
 
 
 /*- FUNCTIONS' PROTOTYPES
 ***************************************************************************************/
 void App_BlinkLED();
-void OnoFFTime_Handler();
+void Button_Handler();
+void SysTickDriver_Handler(void);
 
 #endif /* APP.H */

@@ -15,6 +15,29 @@
 
 #include "IntCtrl.h"
 
+
+/*- CALLBACK FUNCTION-related
+***************************************************************************************/
+
+GPIOF_cb_type GPIOF_Callback_ptr  = NULL;
+
+void GPIOF_cb(GPIOF_cb_type ptr)
+{
+	if(ptr != NULL)
+	{
+		GPIOF_Callback_ptr = ptr;
+	}
+}
+
+void GPIOF_Handler(void)
+{
+	if(GPIOF_Callback_ptr != NULL)
+	{
+		GPIOF_Callback_ptr();
+	}
+}
+
+
 /* FUNCTIONS' DECLARATION
 ****************************************************************************************/
 

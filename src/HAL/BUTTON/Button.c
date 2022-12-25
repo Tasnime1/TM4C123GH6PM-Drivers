@@ -1,5 +1,3 @@
-#include "BUTTON.h"
-
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
@@ -15,28 +13,6 @@
 ***************************************************************************************/
 
 #include "Button.h"
-
-
-/*- CALLBACK FUNCTION-related
-***************************************************************************************/
-
-cb_type Callback_ptr  = NULL;
-
-void Buttons_cb(cb_type ptr)
-{
-	if(ptr != NULL)
-	{
-		Callback_ptr = ptr;
-	}
-}
-
-void GPIOF_Handler(void)
-{
-	if(Callback_ptr != NULL)
-	{
-		Callback_ptr();
-	}
-}
 
 
 /*- APIs DECLARATIONS

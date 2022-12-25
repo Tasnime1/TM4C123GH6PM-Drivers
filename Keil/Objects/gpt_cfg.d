@@ -1,0 +1,10 @@
+.\objects\gpt_cfg.o: ..\src\MCAL\GPT\GPT_cfg.c
+.\objects\gpt_cfg.o: ..\src\MCAL\GPT\GPT_cfg.h
+.\objects\gpt_cfg.o: ..\src\MCAL\GPT\GPT.h
+.\objects\gpt_cfg.o: ..\src\Service\types.h
+.\objects\gpt_cfg.o: ..\src\Service\BIT_MATH.h
+.\objects\gpt_cfg.o: ..\src\MCAL\GPT\GPT_cfg.h
+.\objects\gpt_cfg.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\gpt_cfg.o: ..\src\MCAL\GPIO\GPIO.h
+.\objects\gpt_cfg.o: ..\src\MCAL\GPIO\GPIO_cfg.h
+.\objects\gpt_cfg.o: ..\src\MCAL\GPIO\GPIO.h

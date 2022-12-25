@@ -1,16 +1,16 @@
-#ifndef GPIO_H
-#define GPIO_H
-
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
 *					File: GPIO.H
 *       Module: GPIO
 *		
-*	 Description: header file for all GPIO related registers and APIs
+*	 Description: Header file for all GPIO related registers and APIs
 *
 *
 ***************************************************************************************/
+
+#ifndef GPIO_H
+#define GPIO_H
 
 
 /*- INCLUDES

@@ -1,26 +1,32 @@
-#ifndef INTCTRL_H
-#define INTCTRL_H
-
 /**************************************************************************************
 * FILE DESCRIPTION
 * -------------------------------------------------------------------------------------
 *					File: INTCTRL.H
 *       Module: INTCTRL
 *		
-*	 Description: header file for all Interrupt Control related registers and APIs
+*	 Description: Header file for all Interrupt Control related registers and APIs
 *
 *
 ***************************************************************************************/
+
+#ifndef INTCTRL_H
+#define INTCTRL_H
+
 
 
 /*- INCLUDES
 ***************************************************************************************/
 #include "types.h"
 #include "BIT_MATH.h"
-#include "IntCtrl_Config.h"
+#include "IntCtrl_cfg.h"
 #include "stdio.h"
 #include "GPIO.h"
 
+/*- CALLBACK FUNCTION AND TYPEDEF
+***************************************************************************************/
+
+typedef void(*GPIOF_cb_type)(void);
+void GPIOF_cb(GPIOF_cb_type ptr);
 
 
 /*- INT_CTRL PORTS' ADDRESSES
