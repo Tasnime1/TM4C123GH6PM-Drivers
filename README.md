@@ -6,11 +6,8 @@ This project aims to control LED blinking for a user-defined ON and OFF periods 
 The project is simulated using KEIL Uvision.
 
 The project consists of APP, HAL and MCAL layers. Each driver in a layer has got 4 files; 2 (.c) files and 2 (.h) files. One pair of (.c and .h) files for the initialization and another pair for the configuration.
-
-It utilizes the GPIO, Systick, GPT and  Interrupt(NVIC) for the MCAL Layer.<br>
-
-Also, LED and PushButton for the HAL Layer.<br>
-
+It utilizes the GPIO, Systick, GPT and  Interrupt(NVIC) for the MCAL Layer.  return
+Also, LED and PushButton for the HAL Layer.  return
 Finally, APP layer is the upper most layer implementing all logic.
 
 You can change the blinking on and off time through two buttons, each of them is used for both specifying time and confirmation.<br>
