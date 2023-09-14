@@ -1,1 +1,24 @@
-# AdvancedES-EgFWD-Project1
+
+# LED Control
+
+This project aims to control LED blinking ofor a user-defined ON and OFF periods changed during runtime.
+
+The project is simulated on KEIL Uvision.
+
+All source files and drivers for the system are included in the src folder.
+
+The project consists of APP, HAL and MCAL layers. Each driver in a layer has got 4 files; 2 (.c) files and 2 (.h) files. one pair of (.c and .h) files for the initialization and another pair for the configuration.
+It utilizes the GPIO, Systick, GPT and  Interrupt(NVIC) for the MCAL Layer.
+Also, LED and PushButton for the HAL Layer.
+APP layer is the upper most layer implementing all logic.
+
+You can basically change the blinking on and off time through two buttons, each is used for both specifying time as well as confirmation for the other button.
+Eg. On Time is controlled using PushButton 1 and Push Button 2 is its confirmation and vice versa.
+    knowing this in mind so then if you want to make the on time 5 seconds and off time 3 seconds for example, you then then press PushButton1 for 5 times and then hit PushButton 2 for confirmation for on time.
+    Then for off time, you press PushButton 2 for 3 times and then hit PushButton 1 for confirmation.
+    Voilaaa, you have a system of blinking LED now of 5 seconds on and 3 seconds off, easy.
+
+Also feel free to check the project's simulation through KEIL project provided.
+
+
+
