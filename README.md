@@ -1,7 +1,7 @@
 
 # LED Control | ARM-based | TivaC | TM4C123GH6PM
 
-*This project aims to control LED blinking for a user-defined ON and OFF periods changed during runtime.
+* This project aims to control LED blinking for a user-defined ON and OFF periods changed during runtime.
 
 The project is simulated using KEIL Uvision.
 
