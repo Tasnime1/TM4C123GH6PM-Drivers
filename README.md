@@ -1,5 +1,6 @@
 
-# LED Control | ARM-based | TivaC | TM4C123GH6PM
+# TivaC (TM4C123GH6PM) Drivers
+# Drivers tested through LED Control application
 
 * This project aims to control LED blinking for a user-defined ON and OFF periods changed during runtime.
 
